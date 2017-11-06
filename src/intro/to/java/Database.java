@@ -6,11 +6,11 @@ import java.util.HashMap;
 public class Database {
 
     private UserAccount user1 = new UserAccount(
-            "00000001", "0001", new BigDecimal("200"));
+            "00001", "00001", new BigDecimal("200"));
     private UserAccount user2 = new UserAccount(
-            "00000002", "0002", new BigDecimal("550"));
+            "00002", "00002", new BigDecimal("550"));
     private UserAccount user3 = new UserAccount(
-            "00000003", "0003", new BigDecimal("1500"));
+            "00003", "00003", new BigDecimal("1500"));
 
     private HashMap<String, UserAccount> users = new HashMap<>();
 
