@@ -66,21 +66,21 @@ class ATM {
                 "3 - Deposit\n" +
                 "4 - Exit");
 
-        int choice = scanner.nextInt();
+        String choice = scanner.next();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.println("Your balance is: " + account.balance);
                 break;
-            case 2:
+            case "2":
                 Withdrawal withdrawal = new Withdrawal();
                 withdrawal.displayMenu();
                 break;
-            case 3:
+            case "3":
                 Deposit deposit = new Deposit();
                 deposit.displayMenu();
                 break;
-            case 4:
+            case "4":
                 System.out.println("Thank you.\n");
                 begin();
              default:
