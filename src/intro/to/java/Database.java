@@ -17,7 +17,7 @@ public class Database {
     private Database() {
         users.put(user1.accountNumber, user1);
         users.put(user2.accountNumber, user2);
-        users.put(user2.accountNumber, user2);
+        users.put(user3.accountNumber, user3);
     }
 
     static Database instance = new Database();
