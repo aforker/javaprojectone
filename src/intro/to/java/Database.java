@@ -1,16 +1,15 @@
 package intro.to.java;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class Database {
 
     private UserAccount user1 = new UserAccount(
-            "00001", "00001", new BigDecimal("200"));
+            "00001", "00001", 200);
     private UserAccount user2 = new UserAccount(
-            "00002", "00002", new BigDecimal("550"));
+            "00002", "00002", 550);
     private UserAccount user3 = new UserAccount(
-            "00003", "00003", new BigDecimal("1500"));
+            "00003", "00003", 1500);
 
     private HashMap<String, UserAccount> users = new HashMap<>();
 
@@ -20,9 +19,9 @@ public class Database {
         users.put(user3.accountNumber, user3);
     }
 
-    static Database instance = new Database();
+    public static Database instance = new Database();
 
-    UserAccount selectFromUsers(String accountNumber) {
+    public UserAccount selectFromUsers(String accountNumber) {
         return users.get(accountNumber);
     }
 }

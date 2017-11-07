@@ -1,21 +1,18 @@
 package intro.to.java;
 
-import java.math.BigDecimal;
 import java.util.Scanner;
 
 
-class ATM {
+public class ATM {
 
-    static UserAccount currentAccount;
-    BigDecimal cash = new BigDecimal(500);
+    public double cashInAtm = 10000;
+    static final String pattern = "^[0-9]{5}$";
     private Scanner scanner = new Scanner(System.in);
-    private final String pattern = "^[0-9]{5}$";
-    private final String lineSeparator = "\n_____________________________________________\n\n";
 
     private ATM() {}
 
     // Create a singleton of ATM so that only have one instance with one cash field for easy tracking
-    static ATM instance = new ATM();
+    public static ATM instance = new ATM();
 
     void begin() {
         System.out.println(
@@ -26,41 +23,45 @@ class ATM {
         );
 
         String accountNumber = scanner.next();
-        UserAccount enteredAccount = Database.instance.selectFromUsers(accountNumber);
 
-        if (!isAccount(accountNumber)) {
-            System.out.println("Incorrect format: account number must be 5 digits\n");
-            begin();
-        } else if (enteredAccount == null) {
-            System.out.println("Account number was incorrect. Please try again\n");
+        boolean accountValid = verifyAccountNumber(accountNumber);
+
+        if(!accountValid) {
+            System.out.println("Account number was incorrect. Must be 5 digits. Please try again\n");
+            waitASecond();
             begin();
         } else {
+            UserAccount enteredAccount = Database.instance.selectFromUsers(accountNumber);
             askForPin(enteredAccount);
         }
     }
 
-    private boolean isAccount(String accountNum) {
-        return accountNum.trim().matches(pattern);
+    public boolean verifyAccountNumber(String accountNumber) {
+        UserAccount enteredAccount = Database.instance.selectFromUsers(accountNumber);
+
+        return enteredAccount != null && accountNumber.trim().matches(pattern);
     }
 
     private void askForPin(UserAccount account) {
         System.out.println("\nPlease enter your pin (5 digits):\n");
-
         String pin = scanner.next().trim();
 
-        if (!pin.matches(pattern)){
-            System.out.println("Incorrect pin format. Must be 5 digits.\n");
-            askForPin(account);
-        } else if (!pin.equals(account.pin)) {
-            System.out.println("Pin incorrect. Please try again.");
+        boolean valid = validatePin(pin, account);
+
+        if(!valid) {
+            System.out.println("Incorrect pin. Must be 5 digits. Please try again\n");
+            waitASecond();
             askForPin(account);
         } else {
-            currentAccount = account;
-            displayMainMenu();
+            displayMainMenu(account);
         }
     }
 
-    void displayMainMenu() {
+    public boolean validatePin(String pin, UserAccount account) {
+        return pin != null && pin.matches(pattern) && pin.equals(account.pin);
+    }
+
+    void displayMainMenu(UserAccount account) {
         System.out.println("What would you like to do? Please choose a number.\n" +
                 "1 - View Balance\n" +
                 "2 - Withdrawal\n" +
@@ -71,27 +72,26 @@ class ATM {
 
         switch (choice) {
             case "1":
-                System.out.println("Your balance is: " + currentAccount.balance + "\n");
+                System.out.println("Your balance is: " + account.balance + "\n");
                 waitASecond();
-                displayMainMenu();
+                displayMainMenu(account);
                 break;
             case "2":
-                Withdrawal withdrawal = new Withdrawal();
+                Withdrawal withdrawal = new Withdrawal(account);
                 withdrawal.displayMenu();
                 break;
             case "3":
-                Deposit deposit = new Deposit();
+                Deposit deposit = new Deposit(account);
                 deposit.displayMenu();
                 break;
             case "4":
                 System.out.println("Thank you.\n");
-                currentAccount = null;
                 begin();
                 break;
             default:
                 System.out.println("Your choice did not match any options. Please try again\n");
                 waitASecond();
-                displayMainMenu();
+                displayMainMenu(account);
                 break;
         }
     }
